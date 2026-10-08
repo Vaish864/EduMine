@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduMine Login</title>
+
+</head>
+
+<body>
+
+    <h1>EduMine Login</h1>
+
+    <form method="POST" action="/login">
+
+        <label>Email:</label>
+        <br>
+
+        <input
+            type="email"
+            name="email"
+            required
+        >
+
+        <br><br>
+
+        <label>Password:</label>
+        <br>
+
+        <input
+            type="password"
+            name="password"
+            required
+        >
+
+        <br><br>
+
+        <label>Select Role:</label>
+        <br>
+
+        <select name="role" required>
+
+            <option value="student">
+                Student
+            </option>
+
+            <option value="faculty">
+                Faculty
+            </option>
+
+            <option value="admin">
+                Admin
+            </option>
+
+        </select>
+
+        <br><br>
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+</body>
+
+</html>

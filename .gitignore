@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 .env
 .vscode/
+
+# Large datasets
+data/*.tsv
+data/*.csv

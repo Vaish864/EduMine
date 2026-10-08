@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Faculty Dashboard - EduMine</title>
+</head>
+
+<body>
+
+    <h1>EduMine</h1>
+
+    <h2>Faculty Dashboard</h2>
+
+    <p>Welcome, {{ name }}!</p>
+
+    <hr>
+
+    <h2>Overall Dataset Analysis</h2>
+
+    <p>
+        <strong>Total Feedback:</strong>
+        {{ total_feedback }}
+    </p>
+
+    <p>
+        <strong>Average Rating:</strong>
+        {{ average_rating }} / 5
+    </p>
+
+    <p>
+        <strong>Positive:</strong>
+        {{ positive_count }}
+    </p>
+
+    <p>
+        <strong>Neutral:</strong>
+        {{ neutral_count }}
+    </p>
+
+    <p>
+        <strong>Negative:</strong>
+        {{ negative_count }}
+    </p>
+
+    <hr>
+
+    <h2>Sentiment Distribution</h2>
+
+    <canvas id="sentimentChart" width="500" height="250"></canvas>
+
+    <hr>
+
+    <h2>Top Keywords in Student Feedback</h2>
+
+    <canvas id="keywordChart" width="600" height="300"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        const sentimentData = {
+            labels: ["Positive", "Neutral", "Negative"],
+
+            datasets: [{
+                label: "Student Feedback",
+
+                data: [
+                    {{ positive_count }},
+                    {{ neutral_count }},
+                    {{ negative_count }}
+                ]
+            }]
+        };
+
+
+        new Chart(
+            document.getElementById("sentimentChart"),
+
+            {
+                type: "pie",
+
+                data: sentimentData
+            }
+        );
+
+
+        const keywordLabels = [
+
+            {% for word, count in keywords %}
+
+                "{{ word }}"{% if not loop.last %},{% endif %}
+
+            {% endfor %}
+
+        ];
+
+
+        const keywordCounts = [
+
+            {% for word, count in keywords %}
+
+                {{ count }}{% if not loop.last %},{% endif %}
+
+            {% endfor %}
+
+        ];
+
+
+        new Chart(
+            document.getElementById("keywordChart"),
+
+            {
+                type: "bar",
+
+                data: {
+
+                    labels: keywordLabels,
+
+                    datasets: [{
+
+                        label: "Keyword Frequency",
+
+                        data: keywordCounts
+
+                    }]
+
+                },
+
+                options: {
+
+                    indexAxis: "y"
+
+                }
+
+            }
+        );
+
+    </script>
+
+    <hr>
+
+    <h2>Live Feedback Submitted Through EduMine</h2>
+
+    <p>
+        <strong>Live Feedback:</strong>
+        {{ live_total }}
+    </p>
+
+    <p>
+        <strong>Average Rating:</strong>
+        {{ live_average }} / 5
+    </p>
+
+    <p>
+        <strong>Positive:</strong>
+        {{ live_positive }}
+    </p>
+
+    <p>
+        <strong>Neutral:</strong>
+        {{ live_neutral }}
+    </p>
+
+    <p>
+        <strong>Negative:</strong>
+        {{ live_negative }}
+    </p>
+
+    <hr>
+
+    <a href="/logout">
+        <button>Logout</button>
+    </a>
+
+</body>
+
+</html>

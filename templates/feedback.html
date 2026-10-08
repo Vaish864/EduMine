@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Give Feedback - EduMine</title>
+</head>
+
+<body>
+
+    <h1>EduMine</h1>
+
+    <h2>Give Feedback</h2>
+
+    <form method="POST" action="/feedback">
+
+        <label>Subject:</label>
+        <br>
+
+        <select name="subject" required>
+            <option value="">Select Subject</option>
+            <option value="Data Mining">Data Mining</option>
+            <option value="Cloud Computing">Cloud Computing</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Database Management">Database Management</option>
+            <option value="Android Development">Android Development</option>
+        </select>
+
+        <br><br>
+
+        <label>Faculty:</label>
+        <br>
+
+        <select name="faculty_id" required>
+            <option value="">Select Faculty</option>
+            <option value="1">Dr. Demo Faculty</option>
+        </select>
+
+        <br><br>
+
+        <label>Rating:</label>
+        <br>
+
+        <select name="rating" required>
+            <option value="">Select Rating</option>
+            <option value="1">1 - Very Poor</option>
+            <option value="2">2 - Poor</option>
+            <option value="3">3 - Average</option>
+            <option value="4">4 - Good</option>
+            <option value="5">5 - Excellent</option>
+        </select>
+
+        <br><br>
+
+        <label>Your Feedback:</label>
+        <br>
+
+        <textarea
+            name="comment"
+            rows="6"
+            cols="50"
+            placeholder="Write your feedback here..."
+            required
+        ></textarea>
+
+        <br><br>
+
+        <button type="submit">
+            Submit Feedback
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/student">
+        <button>Back to Dashboard</button>
+    </a>
+
+</body>
+
+</html>
