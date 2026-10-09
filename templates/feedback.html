@@ -1,84 +1,116 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Give Feedback - EduMine</title>
+    <title>Give Feedback | EduMine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body class="dashboard-page feedback-page">
 
-    <h1>EduMine</h1>
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('student_dashboard') }}">
+            <span class="brand-mark">E</span>
+            <span>EduMine<small>Student Feedback Portal</small></span>
+        </a>
 
-    <h2>Give Feedback</h2>
+        <nav class="topbar-actions">
+            <a href="{{ url_for('student_feedback_history') }}">My History</a>
+            <a class="logout-link" href="{{ url_for('logout') }}">Log out</a>
+        </nav>
+    </header>
 
-    <form method="POST" action="/feedback">
+    <main class="feedback-container">
 
-        <label>Subject:</label>
-        <br>
+        <a class="back-link" href="{{ url_for('student_dashboard') }}">
+            ← Back to dashboard
+        </a>
 
-        <select name="subject" required>
-            <option value="">Select Subject</option>
-            <option value="Data Mining">Data Mining</option>
-            <option value="Cloud Computing">Cloud Computing</option>
-            <option value="Machine Learning">Machine Learning</option>
-            <option value="Database Management">Database Management</option>
-            <option value="Android Development">Android Development</option>
-        </select>
+        <section class="feedback-intro">
+            <p class="eyebrow">YOUR VOICE MATTERS</p>
+            <h1>Share your feedback.</h1>
+            <p>
+                Tell us about your learning experience. Honest feedback helps
+                us understand student opinions and identify areas for improvement.
+            </p>
+        </section>
 
-        <br><br>
+        <section class="feedback-form-card">
+            <div class="form-card-heading">
+                <div>
+                    <h2>Feedback form</h2>
+                    <p>Complete the details below to submit your response.</p>
+                </div>
+                <span class="required-note">* Required fields</span>
+            </div>
 
-        <label>Faculty:</label>
-        <br>
+            <form method="POST" action="/feedback" class="feedback-form">
 
-        <select name="faculty_id" required>
-            <option value="">Select Faculty</option>
-            <option value="1">Dr. Demo Faculty</option>
-        </select>
+                <div class="form-field">
+                    <label for="subject">Subject <span>*</span></label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Select a subject</option>
+                        <option value="Data Mining">Data Mining</option>
+                        <option value="Cloud Computing">Cloud Computing</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                        <option value="Database Management">Database Management</option>
+                        <option value="Android Development">Android Development</option>
+                    </select>
+                </div>
 
-        <br><br>
+                <div class="form-field">
+                    <label for="faculty_id">Faculty <span>*</span></label>
+                    <select id="faculty_id" name="faculty_id" required>
+                        <option value="">Select faculty</option>
+                        <option value="1">Dr. Demo Faculty</option>
+                    </select>
+                </div>
 
-        <label>Rating:</label>
-        <br>
+                <div class="form-field">
+                    <label for="rating">Overall rating <span>*</span></label>
+                    <select id="rating" name="rating" required>
+                        <option value="">Choose a rating</option>
+                        <option value="1">1 — Very Poor</option>
+                        <option value="2">2 — Poor</option>
+                        <option value="3">3 — Average</option>
+                        <option value="4">4 — Good</option>
+                        <option value="5">5 — Excellent</option>
+                    </select>
+                    <p class="field-help">Choose the rating that best reflects your experience.</p>
+                </div>
 
-        <select name="rating" required>
-            <option value="">Select Rating</option>
-            <option value="1">1 - Very Poor</option>
-            <option value="2">2 - Poor</option>
-            <option value="3">3 - Average</option>
-            <option value="4">4 - Good</option>
-            <option value="5">5 - Excellent</option>
-        </select>
+                <div class="form-field">
+                    <label for="comment">Your comments <span>*</span></label>
+                    <textarea
+                        id="comment"
+                        name="comment"
+                        rows="6"
+                        placeholder="What went well? What could be improved?"
+                        required
+                    ></textarea>
+                    <p class="field-help">
+                        Be specific and constructive. Your comments help EduMine analyse student feedback.
+                    </p>
+                </div>
 
-        <br><br>
+                <div class="form-actions">
+                    <a class="cancel-button" href="{{ url_for('student_dashboard') }}">
+                        Cancel
+                    </a>
+                    <button class="primary-button submit-button" type="submit">
+                        Submit feedback <span aria-hidden="true">→</span>
+                    </button>
+                </div>
+            </form>
+        </section>
 
-        <label>Your Feedback:</label>
-        <br>
+        <p class="feedback-footer-note">
+            EduMine uses text mining and sentiment analysis to identify patterns in feedback.
+        </p>
 
-        <textarea
-            name="comment"
-            rows="6"
-            cols="50"
-            placeholder="Write your feedback here..."
-            required
-        ></textarea>
-
-        <br><br>
-
-        <button type="submit">
-            Submit Feedback
-        </button>
-
-    </form>
-
-    <br>
-
-    <a href="/student">
-        <button>Back to Dashboard</button>
-    </a>
+    </main>
 
 </body>
-
 </html>

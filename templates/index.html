@@ -1,31 +1,132 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>EduMine</title>
+    <title>EduMine | Student Feedback Analysis</title>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body class="landing-page">
 
-    <h1>EduMine</h1>
+    <header class="landing-header">
+        <a href="/" class="landing-brand">
+            <span class="landing-brand-mark">E</span>
+            <span>EduMine</span>
+        </a>
 
-    <h2>Student Feedback Text Mining and Opinion Analysis System</h2>
+        <a href="/login" class="landing-login-link">Login</a>
+    </header>
 
-    <p>
-        EduMine analyzes student feedback using
-        Text Data Mining and Sentiment Analysis.
-    </p>
+    <main class="landing-main">
 
-    <a href="/login">
-        <button>Login</button>
-    </a>
+        <section class="landing-hero">
+            <div class="landing-content">
+
+                <p class="landing-eyebrow">
+                    STUDENT FEEDBACK · TEXT MINING · SENTIMENT ANALYSIS
+                </p>
+
+                <h1>
+                    Every opinion<br>
+                    <span>has a story.</span>
+                </h1>
+
+                <p class="landing-description">
+                    EduMine transforms student feedback into meaningful insights
+                    using text mining and sentiment analysis, helping uncover
+                    opinions, understand experiences, and identify areas for improvement.
+                </p>
+
+                <div class="landing-actions">
+                    <a href="/login" class="landing-primary-button">
+                        Get started <span aria-hidden="true">→</span>
+                    </a>
+                    <a href="#about" class="landing-secondary-link">
+                        Explore EduMine
+                    </a>
+                </div>
+
+                <div class="landing-trust-note">
+                    <span class="landing-trust-dot"></span>
+                    Turning feedback into actionable insights
+                </div>
+
+            </div>
+
+            <div class="landing-visual" aria-hidden="true">
+                <div class="visual-orbit visual-orbit-one"></div>
+                <div class="visual-orbit visual-orbit-two"></div>
+
+                <div class="visual-center">
+                    <span class="visual-center-icon">E</span>
+                    <strong>EduMine</strong>
+                    <span>Understand every voice</span>
+                </div>
+
+                <div class="visual-card visual-card-top">
+                    <span class="visual-card-label">TEXT MINING</span>
+                    <div class="visual-lines">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <div class="visual-card visual-card-bottom">
+                    <span class="visual-card-label">SENTIMENT ANALYSIS</span>
+                    <div class="visual-sentiments">
+                        <span class="sentiment-positive"></span>
+                        <span class="sentiment-neutral"></span>
+                        <span class="sentiment-negative"></span>
+                    </div>
+                    <div class="visual-sentiment-labels">
+                        <span>Positive</span>
+                        <span>Neutral</span>
+                        <span>Negative</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="landing-about" id="about">
+            <p class="landing-eyebrow">ABOUT THE PROJECT</p>
+            <h2>From student opinions to useful insights.</h2>
+            <p>
+                EduMine applies text preprocessing, sentiment classification,
+                and keyword extraction to help reveal patterns in feedback.
+            </p>
+
+            <div class="landing-feature-grid">
+                <article class="landing-feature">
+                    <span class="landing-feature-number">01</span>
+                    <h3>Collect feedback</h3>
+                    <p>Provide a platform for students to share ratings and comments.</p>
+                </article>
+
+                <article class="landing-feature">
+                    <span class="landing-feature-number">02</span>
+                    <h3>Analyse opinions</h3>
+                    <p>Use text mining techniques to classify sentiment and identify keywords.</p>
+                </article>
+
+                <article class="landing-feature">
+                    <span class="landing-feature-number">03</span>
+                    <h3>Explore insights</h3>
+                    <p>View analytical summaries that help interpret feedback patterns.</p>
+                </article>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="landing-footer">
+        <span>EduMine</span>
+        <span>Student Feedback Text Mining and Opinion Analysis System</span>
+    </footer>
 
 </body>
-
 </html>

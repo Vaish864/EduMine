@@ -4,20 +4,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anonymous Feedback - EduMine</title>
+    <title>Anonymous Feedback | EduMine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
-    <h1>EduMine</h1>
-    <h2>Anonymous Student Feedback</h2>
+<body class="faculty-feedback-page">
 
-    <p>Welcome, {{ name }}!</p>
-    <p>Student identities are hidden from this view.</p>
+    <header class="faculty-topbar">
+        <a class="faculty-brand" href="{{ url_for('faculty_dashboard') }}">
+            <span class="faculty-brand-mark">E</span>
+            <span>
+                EduMine
+                <small>Faculty Analytics</small>
+            </span>
+        </a>
 
-    <hr>
+        <nav class="faculty-nav">
+            <a href="{{ url_for('faculty_dashboard') }}">Analytics</a>
+            <a class="faculty-logout" href="{{ url_for('logout') }}">Log out</a>
+        </nav>
+    </header>
 
-    {% if feedback_records %}
-    <table border="1" cellpadding="10" cellspacing="0">
+    <main class="faculty-feedback-container">
+
+        <a class="faculty-back-link" href="{{ url_for('faculty_dashboard') }}">
+            ← Back to analytics
+        </a>
+
+        <section class="faculty-feedback-heading">
+            <div>
+                <p class="faculty-eyebrow">FEEDBACK REVIEW</p>
+                <h1>Student feedback</h1>
+                <p class="faculty-heading-description">
+                    Review student ratings and comments to understand
+                    learning experiences and identify areas for improvement.
+                </p>
+            </div>
+
+            <div class="privacy-status">
+                <span class="privacy-status-dot"></span>
+                Identity protected
+            </div>
+        </section>
+
+        <section class="privacy-notice">
+            <div class="privacy-notice-icon" aria-hidden="true">✓</div>
+            <div>
+                <h2>Confidential feedback view</h2>
+                <p>
+                    Student names, emails and student IDs are not displayed here.
+                    Feedback comments and ratings are shown for review.
+                </p>
+            </div>
+        </section>
+
+        <section class="faculty-records-section">
+
+            <div class="faculty-records-heading">
+                <div>
+                    <h2>Feedback records</h2>
+                    <p>Read each submission and its predicted sentiment.</p>
+                </div>
+
+                {% if feedback_records %}
+                <span class="faculty-record-count">
+                    {{ feedback_records|length }}
+                    {% if feedback_records|length == 1 %}
+                        record
+                    {% else %}
+                        records
+                    {% endif %}
+                </span>
+                {% endif %}
+            </div>
+
+            {% if feedback_records %}
+
+            
+<div class="faculty-table-wrapper">
+    <table border="1" cellpadding="10" cellspacing="0" class="faculty-feedback-table">
         <thead>
             <tr>
                 <th>Feedback ID</th>
@@ -42,13 +107,17 @@
             {% endfor %}
         </tbody>
     </table>
-    {% else %}
-    <p>No feedback has been submitted through EduMine yet.</p>
-    {% endif %}
+</div>
+            {% endif %}
 
-    <br>
-    <a href="{{ url_for('faculty_dashboard') }}">Back to Faculty Dashboard</a>
-    <br><br>
-    <a href="{{ url_for('logout') }}">Logout</a>
+        </section>
+
+        <footer class="faculty-feedback-footer">
+            <span>EduMine · Text Mining &amp; Opinion Analysis</span>
+            <span>Faculty Workspace</span>
+        </footer>
+
+    </main>
+
 </body>
 </html>

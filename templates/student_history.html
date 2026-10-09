@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Feedback History | EduMine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="dashboard-page history-page">
+
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('student_dashboard') }}">
+            <span class="brand-mark">E</span>
+            <span>EduMine<small>Student Feedback Portal</small></span>
+        </a>
+
+        <nav class="topbar-actions">
+            <a href="{{ url_for('feedback') }}">Give Feedback</a>
+            <a class="logout-link" href="{{ url_for('logout') }}">Log out</a>
+        </nav>
+    </header>
+
+    <main class="history-container">
+
+        <a class="back-link" href="{{ url_for('student_dashboard') }}">
+            ← Back to dashboard
+        </a>
+
+        <section class="history-intro">
+            <p class="eyebrow">YOUR SUBMISSIONS</p>
+            <h1>Your feedback history.</h1>
+            <p>
+                Welcome, {{ name }}. Here's a record of the feedback
+                you've shared through EduMine.
+            </p>
+        </section>
+
+        {% if feedback_records %}
+
+            <section class="history-list">
+                <div class="history-list-heading">
+                    <h2>Previous submissions</h2>
+                    <span class="submission-count">
+                        {{ feedback_records|length }}
+                        {% if feedback_records|length == 1 %}
+                            submission
+                        {% else %}
+                            submissions
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% for record in feedback_records %}
+                    <article class="history-card">
+
+                        <div class="history-card-top">
+                            <div>
+                                <p class="history-subject-label">SUBJECT</p>
+                                <h3>{{ record.subject }}</h3>
+                                <p class="history-faculty">
+                                    Faculty: {{ record.faculty_name or "Not specified" }}
+                                </p>
+                            </div>
+
+                            <div class="history-rating">
+                                <span class="rating-number">{{ record.rating }}</span>
+                                <span class="rating-out-of">/ 5</span>
+                            </div>
+                        </div>
+
+                        <div class="history-comment">
+                            <p class="history-subject-label">YOUR COMMENT</p>
+                            <p>{{ record.comment }}</p>
+                        </div>
+
+                        <div class="history-card-bottom">
+                            <div>
+                                <span class="history-meta-label">Predicted sentiment</span>
+                                <span class="sentiment-tag
+                                    {% if record.sentiment == 'Positive' %}
+                                        sentiment-positive
+                                    {% elif record.sentiment == 'Negative' %}
+                                        sentiment-negative
+                                    {% elif record.sentiment == 'Neutral' %}
+                                        sentiment-neutral
+                                    {% else %}
+                                        sentiment-unknown
+                                    {% endif %}">
+                                    {{ record.sentiment or "Not analyzed" }}
+                                </span>
+                            </div>
+
+                            <div class="history-date">
+                                <span class="history-meta-label">Submitted</span>
+                                <span>{{ record.created_at }}</span>
+                            </div>
+                        </div>
+
+                    </article>
+                {% endfor %}
+            </section>
+
+        {% else %}
+
+            <section class="history-empty-state">
+                <div class="empty-state-icon" aria-hidden="true">✦</div>
+                <h2>Your story starts here.</h2>
+                <p>
+                    You haven't submitted any feedback yet.
+                    Share your experience to help improve the learning journey.
+                </p>
+                <a class="primary-button" href="{{ url_for('feedback') }}">
+                    Give your first feedback <span aria-hidden="true">→</span>
+                </a>
+            </section>
+
+        {% endif %}
+
+        <footer class="dashboard-footer">
+            <span>EduMine · Student Feedback Text Mining System</span>
+            <span>Your voice matters.</span>
+        </footer>
+
+    </main>
+
+</body>
+</html>

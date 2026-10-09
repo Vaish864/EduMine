@@ -1,49 +1,36 @@
+
 import joblib
 
+MODEL_PATH = "mining/saved_model/sentiment_model.pkl"
+VECTORIZER_PATH = "mining/saved_model/tfidf_vectorizer.pkl"
 
-# Load the saved model and TF-IDF vectorizer
-model = joblib.load(
-    "mining/saved_model/sentiment_model.pkl"
-)
-
-vectorizer = joblib.load(
-    "mining/saved_model/tfidf_vectorizer.pkl"
-)
+model = joblib.load(MODEL_PATH)
+vectorizer = joblib.load(VECTORIZER_PATH)
 
 
 def predict_sentiment(feedback):
-    """
-    Predict sentiment for a new student feedback.
-    """
+    """Predict positive, neutral, or negative sentiment."""
 
-    # Convert feedback into TF-IDF features
-    feedback_vector = vectorizer.transform(
-        [feedback]
-    )
+    if not isinstance(feedback, str) or not feedback.strip():
+        return None
 
-    # Predict sentiment
-    prediction = model.predict(
-        feedback_vector
-    )[0]
+    feedback_vector = vectorizer.transform([feedback.strip()])
+    prediction = str(model.predict(feedback_vector)[0]).strip().lower()
+
+    if prediction not in {"positive", "neutral", "negative"}:
+        raise ValueError(f"Unexpected sentiment label: {prediction}")
 
     return prediction
 
 
 if __name__ == "__main__":
-
     test_feedback = [
         "The teacher explains everything clearly and gives useful examples.",
         "The teaching is confusing and difficult to understand.",
-        "The overall teaching experience was average."
+        "The overall teaching experience was average.",
+        ""
     ]
 
     for feedback in test_feedback:
-
-        sentiment = predict_sentiment(
-            feedback
-        )
-
-        print("\nFeedback:")
-        print(feedback)
-
-        print("Predicted Sentiment:", sentiment)
+        print("\nFeedback:", repr(feedback))
+        print("Predicted sentiment:", predict_sentiment(feedback))

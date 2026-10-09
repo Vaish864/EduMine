@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | EduMine</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="dashboard-page admin-page">
+
+    <!-- Top navigation -->
+
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('admin_dashboard') }}">
+            <span class="brand-mark">E</span>
+            <span>
+                EduMine
+                <small>Administration</small>
+            </span>
+        </a>
+
+        <nav class="topbar-actions">
+            <a href="{{ url_for('faculty_dashboard') }}">
+                Feedback Analytics
+            </a>
+
+            <a class="logout-link" href="{{ url_for('logout') }}">
+                Log out
+            </a>
+        </nav>
+    </header>
+
+
+    <main class="dashboard-container">
+
+        <!-- Welcome panel -->
+
+        <section class="welcome-panel admin-welcome">
+            <div>
+                <p class="eyebrow">ADMINISTRATOR PORTAL</p>
+
+                <h1>System Overview</h1>
+
+                <p class="welcome-description">
+                    Welcome, {{ name }}! Monitor the EduMine feedback
+                    system and explore insights from student feedback.
+                </p>
+
+                <a class="primary-button"
+                   href="{{ url_for('faculty_dashboard') }}">
+                    Explore Feedback Analytics →
+                </a>
+            </div>
+
+            <div class="welcome-decoration" aria-hidden="true">E</div>
+        </section>
+
+
+        <!-- System overview -->
+
+        <section class="analytics-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">AT A GLANCE</p>
+                    <h2>System Overview</h2>
+                    <p>A summary of the current EduMine application.</p>
+                </div>
+            </div>
+
+            <div class="metric-grid admin-metric-grid">
+
+                <article class="metric-card">
+                    <div class="admin-metric-icon">S</div>
+                    <span class="metric-label">Student Accounts</span>
+                    <strong class="metric-value">
+                        {{ student_count }}
+                    </strong>
+                    <span class="metric-note">
+                        Registered students
+                    </span>
+                </article>
+
+                <article class="metric-card">
+                    <div class="admin-metric-icon">F</div>
+                    <span class="metric-label">Faculty Accounts</span>
+                    <strong class="metric-value">
+                        {{ faculty_count }}
+                    </strong>
+                    <span class="metric-note">
+                        Registered faculty
+                    </span>
+                </article>
+
+                <article class="metric-card">
+                    <div class="admin-metric-icon">↗</div>
+                    <span class="metric-label">Feedback Submissions</span>
+                    <strong class="metric-value">
+                        {{ feedback_count }}
+                    </strong>
+                    <span class="metric-note">
+                        Live application records
+                    </span>
+                </article>
+
+            </div>
+        </section>
+
+
+        <!-- Faculty performance insights -->
+
+        <section class="analytics-section faculty-insights-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">LIVE FEEDBACK ANALYSIS</p>
+                    <h2>Faculty Performance Insights</h2>
+                    <p>
+                        Understand student sentiment, ratings and recurring
+                        concerns using feedback submitted through EduMine.
+                    </p>
+                </div>
+            </div>
+
+            {% if faculty_insights %}
+
+                <div class="faculty-insights-grid">
+
+                    {% for faculty in faculty_insights %}
+
+                    <article class="faculty-insight-card">
+
+                        <div class="faculty-insight-header">
+                            <div>
+                                <span class="metric-label">FACULTY MEMBER</span>
+                                <h3>{{ faculty.name }}</h3>
+                                <p class="faculty-subject">
+                                    {{ faculty.subject or "Subject not specified" }}
+                                </p>
+                            </div>
+
+                            <span class="faculty-status
+                                {% if faculty.performance_status == 'Potential areas for improvement' %}
+                                    status-improvement
+                                {% elif faculty.performance_status == 'Generally positive feedback' %}
+                                    status-positive
+                                {% else %}
+                                    status-pending
+                                {% endif %}">
+                                {{ faculty.performance_status }}
+                            </span>
+                        </div>
+
+                        <div class="faculty-summary-metrics">
+
+                            <div class="faculty-summary-metric">
+                                <span>Average rating</span>
+                                <strong>
+                                    {% if faculty.total > 0 %}
+                                        {{ "%.2f"|format(faculty.average_rating) }}/5
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </strong>
+                            </div>
+
+                            <div class="faculty-summary-metric">
+                                <span>Total feedback</span>
+                                <strong>{{ faculty.total }}</strong>
+                            </div>
+
+                        </div>
+
+                        <h4>Sentiment distribution</h4>
+
+                        {% if faculty.total > 0 %}
+
+                            <div class="sentiment-progress-list">
+
+                                <div class="sentiment-progress-item">
+                                    <div class="sentiment-progress-label">
+                                        <span>Positive</span>
+                                        <strong>{{ faculty.positive_pct }}%</strong>
+                                    </div>
+                                    <div class="sentiment-progress-track">
+                                        <div class="sentiment-progress-fill sentiment-positive-fill"
+                                             style="width: {{ faculty.positive_pct }}%">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sentiment-progress-item">
+                                    <div class="sentiment-progress-label">
+                                        <span>Neutral</span>
+                                        <strong>{{ faculty.neutral_pct }}%</strong>
+                                    </div>
+                                    <div class="sentiment-progress-track">
+                                        <div class="sentiment-progress-fill sentiment-neutral-fill"
+                                             style="width: {{ faculty.neutral_pct }}%">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sentiment-progress-item">
+                                    <div class="sentiment-progress-label">
+                                        <span>Negative</span>
+                                        <strong>{{ faculty.negative_pct }}%</strong>
+                                    </div>
+                                    <div class="sentiment-progress-track">
+                                        <div class="sentiment-progress-fill sentiment-negative-fill"
+                                             style="width: {{ faculty.negative_pct }}%">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="faculty-sentiment-counts">
+                                <span>Positive: {{ faculty.positive }}</span>
+                                <span>Neutral: {{ faculty.neutral }}</span>
+                                <span>Negative: {{ faculty.negative }}</span>
+                            </div>
+
+                        {% else %}
+
+                            <p class="faculty-empty-message">
+                                No feedback has been submitted for this faculty member yet.
+                            </p>
+
+                        {% endif %}
+
+                        <div class="faculty-improvement-box">
+                            <h4>Potential improvement themes</h4>
+
+                            {% if faculty.total < 5 %}
+                                <p>
+                                    More feedback is needed before drawing
+                                    conclusions about performance.
+                                </p>
+
+                            {% elif faculty.complaint_terms %}
+                                <p class="faculty-theme-intro">
+                                    Frequent terms in negative comments:
+                                </p>
+
+                                <div class="faculty-keyword-list">
+                                    {% for term, count in faculty.complaint_terms %}
+                                        <span class="faculty-keyword">
+                                            {{ term }}
+                                            <small>{{ count }}</small>
+                                        </span>
+                                    {% endfor %}
+                                </div>
+
+                                <p class="faculty-insight-disclaimer">
+                                    These are recurring words, not verified
+                                    causes of dissatisfaction. Review the
+                                    comments in context.
+                                </p>
+
+                            {% else %}
+                                <p>
+                                    No negative feedback themes have been
+                                    identified in the current submissions.
+                                </p>
+                            {% endif %}
+                        </div>
+
+                    </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="faculty-empty-state">
+                    <h3>No faculty accounts found</h3>
+                    <p>
+                        Faculty insights will appear here once faculty
+                        accounts are available.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </section>
+        <!-- Admin tools -->
+
+        <section class="analytics-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">QUICK ACCESS</p>
+                    <h2>Admin Actions</h2>
+                    <p>Navigate to the main EduMine tools.</p>
+                </div>
+            </div>
+
+            <div class="admin-action-grid">
+
+                <a class="admin-action-card"
+                   href="{{ url_for('faculty_dashboard') }}">
+
+                    <span class="admin-action-icon">↗</span>
+
+                    <div>
+                        <h3>Feedback Analytics</h3>
+                        <p>
+                            Explore sentiment distribution, frequent
+                            keywords and overall dataset statistics.
+                        </p>
+                    </div>
+
+                    <span class="admin-action-link">
+                        Open analytics →
+                    </span>
+                </a>
+
+                <a class="admin-action-card"
+                   href="{{ url_for('logout') }}">
+
+                    <span class="admin-action-icon">↪</span>
+
+                    <div>
+                        <h3>Log Out</h3>
+                        <p>
+                            End your administrator session and return
+                            to the EduMine login page.
+                        </p>
+                    </div>
+
+                    <span class="admin-action-link">
+                        Log out securely →
+                    </span>
+                </a>
+
+            </div>
+        </section>
+
+
+        <!-- Project note -->
+
+        <section class="admin-note">
+            <span class="admin-note-mark">i</span>
+
+            <div>
+                <h3>About EduMine Analytics</h3>
+                <p>
+                    EduMine uses text mining and sentiment analysis
+                    to identify patterns in student feedback. Preloaded
+                    dataset insights and live application submissions
+                    are presented separately in the analytics dashboard.
+                </p>
+            </div>
+        </section>
+
+
+        <footer class="dashboard-footer">
+            <span>EduMine · Student Feedback Text Mining System</span>
+            <span>Feedback insights for better learning.</span>
+        </footer>
+
+    </main>
+
+</body>
+</html>

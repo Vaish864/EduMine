@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,181 +6,479 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Faculty Dashboard - EduMine</title>
+    <title>
+        {% if role == "admin" %}
+            Admin Analytics | EduMine
+        {% else %}
+            Faculty Dashboard | EduMine
+        {% endif %}
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body class="dashboard-page analytics-page">
 
-    <h1>EduMine</h1>
+    <header class="topbar">
+        <a class="brand" href="{% if role == 'admin' %}{{ url_for('admin_dashboard') }}{% else %}{{ url_for('faculty_dashboard') }}{% endif %}">
+            <span class="brand-mark">E</span>
+            <span>
+                EduMine
+                <small>Feedback Analytics</small>
+            </span>
+        </a>
 
-    <h2>Faculty Dashboard</h2>
+        <nav class="topbar-actions">
+            {% if role == "faculty" %}
+                <a href="{{ url_for('faculty_feedback') }}">Anonymous Feedback</a>
+            {% endif %}
 
-    <p>Welcome, {{ name }}!</p>
+            {% if role == "admin" %}
+                <a href="{{ url_for('admin_dashboard') }}">Admin Home</a>
+            {% endif %}
 
-    <hr>
+            <a class="logout-link" href="{{ url_for('logout') }}">Log out</a>
+        </nav>
+    </header>
 
-    <h2>Overall Dataset Analysis</h2>
+    <main class="dashboard-container">
 
-    <p>
-        <strong>Total Feedback:</strong>
-        {{ total_feedback }}
+        <section class="welcome-panel analytics-welcome">
+            <div>
+                <p class="eyebrow">
+                    {% if role == "admin" %}
+                        ADMINISTRATION
+                    {% else %}
+                        FACULTY PORTAL
+                    {% endif %}
+                </p>
+
+                <h1>
+                    {% if role == "admin" %}
+                        Feedback Analytics
+                    {% else %}
+                        Your Analytics Dashboard
+                    {% endif %}
+                </h1>
+
+                <p class="welcome-description">
+                    {% if role == "admin" %}
+                        Welcome, {{ name }}. Explore overall dataset trends,
+                        common keywords and feedback submitted through EduMine.
+                    {% else %}
+                        Welcome, {{ name }}. Explore ratings and sentiment
+                        patterns in feedback submitted to you through EduMine.
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="welcome-decoration" aria-hidden="true">E</div>
+        </section>
+
+        <!-- Overall preloaded dataset analysis: ADMIN ONLY -->
+
+        {% if role == "admin" %}
+
+        <section class="analytics-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">PRELOADED DATASET</p>
+                    <h2>Overall Dataset Analysis</h2>
+                    <p>Summary of the existing student feedback dataset.</p>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <article class="metric-card">
+                    <span class="metric-label">Total Feedback</span>
+                    <strong class="metric-value">{{ total_feedback }}</strong>
+                    <span class="metric-note">Dataset records</span>
+                </article>
+
+                <article class="metric-card">
+                    <span class="metric-label">Average Rating</span>
+                    <strong class="metric-value">
+                        {{ average_rating }}<span class="metric-unit">/ 5</span>
+                    </strong>
+                    <span class="metric-note">Dataset average</span>
+                </article>
+
+                <article class="metric-card sentiment-positive">
+                    <span class="metric-label">Positive</span>
+                    <strong class="metric-value">{{ positive_count }}</strong>
+                    <span class="metric-note">Positive sentiment</span>
+                </article>
+
+                <article class="metric-card sentiment-neutral">
+                    <span class="metric-label">Neutral</span>
+                    <strong class="metric-value">{{ neutral_count }}</strong>
+                    <span class="metric-note">Neutral sentiment</span>
+                </article>
+
+                <article class="metric-card sentiment-negative">
+                    <span class="metric-label">Negative</span>
+                    <strong class="metric-value">{{ negative_count }}</strong>
+                    <span class="metric-note">Negative sentiment</span>
+                </article>
+            </div>
+
+            <div class="chart-grid">
+                <article class="chart-card">
+                    <div class="chart-heading">
+                        <div>
+                            <h3>Sentiment Distribution</h3>
+                            <p>Breakdown of sentiment in the dataset</p>
+                        </div>
+                    </div>
+
+                    <div class="chart-canvas sentiment-canvas">
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+                </article>
+
+                <article class="chart-card">
+                    <div class="chart-heading">
+                        <div>
+                            <h3>Top Feedback Keywords</h3>
+                            <p>Most frequently occurring keywords</p>
+                        </div>
+                    </div>
+
+                    <div class="chart-canvas keyword-canvas">
+                        <canvas id="keywordChart"></canvas>
+                    </div>
+                </article>
+            </div>
+
+            <p class="data-note">
+                These results describe the preloaded dataset. They are not
+                broken down by individual faculty member or subject.
+            </p>
+        </section>
+
+        {% endif %}
+
+       
+<!-- Live feedback analytics -->
+
+<section class="analytics-section live-section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">LIVE APPLICATION DATA</p>
+
+            <h2>
+                {% if role == "admin" %}
+                    Combined EduMine Submissions
+                {% else %}
+                    Your Feedback Analysis
+                {% endif %}
+            </h2>
+
+            <p>
+                {% if role == "admin" %}
+                    Analytics from feedback submitted across all faculty.
+                {% else %}
+                    Analytics from feedback submitted to your faculty account.
+                {% endif %}
+            </p>
+        </div>
+
+        {% if role == "faculty" %}
+        <a class="secondary-button"
+           href="{{ url_for('faculty_feedback') }}">
+            View anonymous feedback →
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Live metric cards -->
+
+    <div class="metric-grid live-metric-grid">
+        <article class="metric-card">
+            <span class="metric-label">Live Feedback</span>
+            <strong class="metric-value">{{ live_total }}</strong>
+            <span class="metric-note">Total submissions</span>
+        </article>
+
+        <article class="metric-card">
+            <span class="metric-label">Average Rating</span>
+            <strong class="metric-value">
+                {{ live_average }}<span class="metric-unit">/ 5</span>
+            </strong>
+            <span class="metric-note">Average submitted rating</span>
+        </article>
+
+        <article class="metric-card sentiment-positive">
+            <span class="metric-label">Positive</span>
+            <strong class="metric-value">{{ live_positive }}</strong>
+            <span class="metric-note">Positive predictions</span>
+        </article>
+
+        <article class="metric-card sentiment-neutral">
+            <span class="metric-label">Neutral</span>
+            <strong class="metric-value">{{ live_neutral }}</strong>
+            <span class="metric-note">Neutral predictions</span>
+        </article>
+
+        <article class="metric-card sentiment-negative">
+            <span class="metric-label">Negative</span>
+            <strong class="metric-value">{{ live_negative }}</strong>
+            <span class="metric-note">Negative predictions</span>
+        </article>
+    </div>
+
+    <!-- Three live charts -->
+
+    <div class="chart-grid">
+
+        <article class="chart-card">
+            <div class="chart-heading">
+                <div>
+                    <h3>Sentiment Distribution</h3>
+                    <p>Positive, neutral and negative feedback</p>
+                </div>
+            </div>
+
+            <div class="chart-canvas sentiment-canvas">
+                <canvas id="liveSentimentChart"></canvas>
+            </div>
+        </article>
+
+        <article class="chart-card">
+            <div class="chart-heading">
+                <div>
+                    <h3>Most-Used Keywords</h3>
+                    <p>Frequent meaningful words in feedback comments</p>
+                </div>
+            </div>
+
+            <div class="chart-canvas keyword-canvas">
+                <canvas id="liveKeywordChart"></canvas>
+            </div>
+        </article>
+
+        <article class="chart-card">
+            <div class="chart-heading">
+                <div>
+                    <h3>Common Complaint Terms</h3>
+                    <p>Frequent words in comments classified as negative</p>
+                </div>
+            </div>
+
+            <div class="chart-canvas keyword-canvas">
+                <canvas id="complaintChart"></canvas>
+            </div>
+        </article>
+
+    </div>
+
+    <p class="data-note">
+        {% if role == "admin" %}
+            Live charts combine submissions across all faculty.
+        {% else %}
+            Live charts use feedback submitted to your faculty account.
+            Student identities are not displayed.
+        {% endif %}
+        Complaint terms are automatically extracted words, not verified
+        complaint categories.
     </p>
+</section>
 
-    <p>
-        <strong>Average Rating:</strong>
-        {{ average_rating }} / 5
-    </p>
+<footer class="dashboard-footer">
+    <span>EduMine · Student Feedback Text Mining System</span>
+    <span>Feedback insights for better learning.</span>
+</footer>
 
-    <p>
-        <strong>Positive:</strong>
-        {{ positive_count }}
-    </p>
+</main>
 
-    <p>
-        <strong>Neutral:</strong>
-        {{ neutral_count }}
-    </p>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <p>
-        <strong>Negative:</strong>
-        {{ negative_count }}
-    </p>
+<script>
+    // --------------------------------------------------
+    // Admin: overall preloaded dataset charts
+    // --------------------------------------------------
 
-    <hr>
+    {% if role == "admin" %}
 
-    <h2>Sentiment Distribution</h2>
+    const sentimentCanvas = document.getElementById("sentimentChart");
 
-    <canvas id="sentimentChart" width="500" height="250"></canvas>
-
-    <hr>
-
-    <h2>Top Keywords in Student Feedback</h2>
-
-    <canvas id="keywordChart" width="600" height="300"></canvas>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-
-        const sentimentData = {
-            labels: ["Positive", "Neutral", "Negative"],
-
-            datasets: [{
-                label: "Student Feedback",
-
-                data: [
-                    {{ positive_count }},
-                    {{ neutral_count }},
-                    {{ negative_count }}
-                ]
-            }]
-        };
-
-
-        new Chart(
-            document.getElementById("sentimentChart"),
-
-            {
-                type: "pie",
-
-                data: sentimentData
-            }
-        );
-
-
-        const keywordLabels = [
-
-            {% for word, count in keywords %}
-
-                "{{ word }}"{% if not loop.last %},{% endif %}
-
-            {% endfor %}
-
-        ];
-
-
-        const keywordCounts = [
-
-            {% for word, count in keywords %}
-
-                {{ count }}{% if not loop.last %},{% endif %}
-
-            {% endfor %}
-
-        ];
-
-
-        new Chart(
-            document.getElementById("keywordChart"),
-
-            {
-                type: "bar",
-
-                data: {
-
-                    labels: keywordLabels,
-
-                    datasets: [{
-
-                        label: "Keyword Frequency",
-
-                        data: keywordCounts
-
-                    }]
-
-                },
-
-                options: {
-
-                    indexAxis: "y"
-
+    if (sentimentCanvas) {
+        new Chart(sentimentCanvas, {
+            type: "doughnut",
+            data: {
+                labels: ["Positive", "Neutral", "Negative"],
+                datasets: [{
+                    data: [
+                        {{ positive_count }},
+                        {{ neutral_count }},
+                        {{ negative_count }}
+                    ],
+                    backgroundColor: ["#639B7B", "#E7B65C", "#CF7770"],
+                    borderColor: "#FFF8EF",
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "62%",
+                plugins: {
+                    legend: { position: "bottom" }
                 }
-
             }
-        );
+        });
+    }
 
-    </script>
+    const datasetKeywordLabels = [
+        {% for word, count in keywords %}
+            {{ word | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
 
-    <hr>
+    const datasetKeywordCounts = [
+        {% for word, count in keywords %}
+            {{ count }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
 
-    <h2>Live Feedback Submitted Through EduMine</h2>
+    const datasetKeywordCanvas = document.getElementById("keywordChart");
 
-    <p>
-        <strong>Live Feedback:</strong>
-        {{ live_total }}
-    </p>
+    if (datasetKeywordCanvas) {
+        new Chart(datasetKeywordCanvas, {
+            type: "bar",
+            data: {
+                labels: datasetKeywordLabels,
+                datasets: [{
+                    label: "Keyword Frequency",
+                    data: datasetKeywordCounts,
+                    backgroundColor: "#E9A16B",
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true } }
+            }
+        });
+    }
 
-    <p>
-        <strong>Average Rating:</strong>
-        {{ live_average }} / 5
-    </p>
+    {% endif %}
 
-    <p>
-        <strong>Positive:</strong>
-        {{ live_positive }}
-    </p>
 
-    <p>
-        <strong>Neutral:</strong>
-        {{ live_neutral }}
-    </p>
+    // --------------------------------------------------
+    // Live sentiment chart (faculty-specific or admin-wide)
+    // --------------------------------------------------
 
-    <p>
-        <strong>Negative:</strong>
-        {{ live_negative }}
-    </p>
+    new Chart(document.getElementById("liveSentimentChart"), {
+        type: "pie",
+        data: {
+            labels: ["Positive", "Neutral", "Negative"],
+            datasets: [{
+                data: [
+                    {{ live_positive }},
+                    {{ live_neutral }},
+                    {{ live_negative }}
+                ],
+                backgroundColor: ["#639B7B", "#E7B65C", "#CF7770"],
+                borderColor: "#FFF8EF",
+                borderWidth: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: "bottom" }
+            }
+        }
+    });
 
-    <hr>
-    
-<p>
-    <a href="{{ url_for('faculty_feedback') }}">
-        View Anonymous Feedback
-    </a>
-</p>
-    <a href="/logout">
-        <button>Logout</button>
-    </a>
+
+    // --------------------------------------------------
+    // Live most-used keywords chart
+    // --------------------------------------------------
+
+    const facultyKeywordLabels = [
+        {% for word, count in faculty_keywords %}
+            {{ word | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const facultyKeywordCounts = [
+        {% for word, count in faculty_keywords %}
+            {{ count }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    new Chart(document.getElementById("liveKeywordChart"), {
+        type: "bar",
+        data: {
+            labels: facultyKeywordLabels,
+            datasets: [{
+                label: "Frequency",
+                data: facultyKeywordCounts,
+                backgroundColor: "#E9A16B",
+                borderRadius: 5
+            }]
+        },
+        options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+
+
+    // --------------------------------------------------
+    // Live common complaint terms chart
+    // --------------------------------------------------
+
+    const complaintLabels = [
+        {% for word, count in complaint_keywords %}
+            {{ word | tojson }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const complaintCounts = [
+        {% for word, count in complaint_keywords %}
+            {{ count }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    new Chart(document.getElementById("complaintChart"), {
+        type: "bar",
+        data: {
+            labels: complaintLabels,
+            datasets: [{
+                label: "Frequency in negative comments",
+                data: complaintCounts,
+                backgroundColor: "#CF7770",
+                borderRadius: 5
+            }]
+        },
+        options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+</script>
 
 </body>
-
 </html>

@@ -1,49 +1,103 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Student Dashboard - EduMine</title>
+    <title>Student Dashboard | EduMine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body class="dashboard-page">
 
-    <h1>EduMine</h1>
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('student_dashboard') }}">
+            <span class="brand-mark">E</span>
+            <span>EduMine<small>Student Feedback Portal</small></span>
+        </a>
 
-    <h2>Student Dashboard</h2>
+        <nav class="topbar-actions">
+            <a href="{{ url_for('student_feedback_history') }}">My History</a>
+            <a class="logout-link" href="{{ url_for('logout') }}">Log out</a>
+        </nav>
+    </header>
 
-    <p>Welcome, {{ name }}!</p>
+    <main class="dashboard-container">
 
-    <hr>
+        <section class="welcome-panel">
+            <div>
+                <p class="eyebrow">STUDENT PORTAL</p>
+                <h1>Welcome back, {{ name }}.</h1>
+                <p class="welcome-description">
+                    Your feedback helps us understand learning experiences
+                    and discover opportunities to improve teaching.
+                </p>
+            </div>
 
-    <h3>Student Menu</h3>
+            <div class="welcome-decoration" aria-hidden="true">E</div>
+        </section>
 
-<h3>Student Menu</h3>
+        <section class="section-heading">
+            <div>
+                <h2>Your dashboard</h2>
+                <p>Share your experience or revisit feedback you've submitted.</p>
+            </div>
+        </section>
 
-<a href="/feedback">
-    <button>Give Feedback</button>
-</a>
+        <section class="student-action-grid">
 
-<br><br>
+            <article class="feature-card primary-card">
+                <div class="card-icon">01</div>
+                <p class="card-label">SHARE YOUR EXPERIENCE</p>
+                <h3>Submit feedback</h3>
+                <p>
+                    Share your thoughts about a subject and its teaching.
+                    Your comments contribute to feedback analysis.
+                </p>
+                <a class="primary-button" href="{{ url_for('feedback') }}">
+                    Give feedback <span aria-hidden="true">→</span>
+                </a>
+            </article>
 
-<button disabled>
-    View My Feedback History
-</button>
+            <article class="feature-card">
+                <div class="card-icon history-icon">02</div>
+                <p class="card-label">YOUR SUBMISSIONS</p>
+                <h3>Feedback history</h3>
+                <p>
+                    Review the subjects, ratings, comments and predicted
+                    sentiment of feedback you've submitted.
+                </p>
+                <a class="secondary-button"
+                   href="{{ url_for('student_feedback_history') }}">
+                    View my history <span aria-hidden="true">→</span>
+                </a>
+            </article>
 
-<br><br>
+        </section>
 
-<button disabled>
-    View Feedback Analysis
-</button>
+        <section class="info-panel">
+            <div class="info-indicator" aria-hidden="true"></div>
+            <div>
+                <h3>How EduMine works</h3>
+                <p>
+                    EduMine uses text preprocessing, machine learning and
+                    sentiment analysis to study written feedback and identify
+                    patterns in student opinions.
+                </p>
+                <p class="privacy-note">
+                    Your feedback is associated with your account internally
+                    so you can view your submission history. Faculty feedback
+                    views hide student identity details.
+                </p>
+            </div>
+        </section>
 
-    <br>
+        <footer class="dashboard-footer">
+            <span>EduMine · Student Feedback Text Mining System</span>
+            <span>Learn better, together.</span>
+        </footer>
 
-    <a href="/logout">
-        <button>Logout</button>
-    </a>
+    </main>
 
 </body>
-
 </html>

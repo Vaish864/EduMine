@@ -1,71 +1,92 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>EduMine Login</title>
+    <title>Login | EduMine</title>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body class="login-page">
 
-    <h1>EduMine Login</h1>
+    <header class="login-header">
+        <a href="/" class="landing-brand">
+            <span class="landing-brand-mark">E</span>
+            <span>EduMine</span>
+        </a>
 
-    <form method="POST" action="/login">
+        <a href="/" class="login-home-link">← Back to home</a>
+    </header>
 
-        <label>Email:</label>
-        <br>
+    <main class="login-main">
 
-        <input
-            type="email"
-            name="email"
-            required
-        >
+        <section class="login-card">
 
-        <br><br>
+            <div class="login-icon">E</div>
 
-        <label>Password:</label>
-        <br>
+            <p class="login-eyebrow">WELCOME TO EDUMINE</p>
+            <h1>Welcome back.</h1>
 
-        <input
-            type="password"
-            name="password"
-            required
-        >
+            <p class="login-description">
+                Sign in to access your EduMine workspace.
+            </p>
 
-        <br><br>
+            <form method="POST" action="/login" class="login-form">
 
-        <label>Select Role:</label>
-        <br>
+                <div class="login-field">
+                    <label for="email">Email address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
 
-        <select name="role" required>
+                <div class="login-field">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
 
-            <option value="student">
-                Student
-            </option>
+                <div class="login-field">
+                    <label for="role">Sign in as</label>
+                    <select id="role" name="role" required>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
 
-            <option value="faculty">
-                Faculty
-            </option>
+                <button type="submit" class="login-submit-button">
+                    Login to EduMine <span aria-hidden="true">→</span>
+                </button>
 
-            <option value="admin">
-                Admin
-            </option>
+            </form>
 
-        </select>
+            <div class="login-security-note">
+                <span aria-hidden="true">◇</span>
+                Access your workspace securely.
+            </div>
 
-        <br><br>
+        </section>
 
-        <button type="submit">
-            Login
-        </button>
+        <p class="login-footer">
+            Student Feedback Text Mining and Opinion Analysis System
+        </p>
 
-    </form>
+    </main>
 
 </body>
-
 </html>
