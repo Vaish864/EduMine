@@ -196,6 +196,35 @@ def faculty_dashboard():
         live_neutral=0,
         live_negative=0
     )
+
+
+@app.route("/faculty/feedback")
+def faculty_feedback():
+
+    if session.get("role") != "faculty":
+        return redirect(url_for("login"))
+
+    connection = get_db_connection()
+
+    feedback_records = connection.execute("""
+        SELECT
+            id,
+            subject,
+            rating,
+            comment,
+            sentiment,
+            created_at
+        FROM feedback
+        ORDER BY created_at DESC
+    """).fetchall()
+
+    connection.close()
+
+    return render_template(
+        "faculty_feedback.html",
+        name=session.get("name"),
+        feedback_records=feedback_records
+    )
 # --------------------------------------------------
 # Admin dashboard
 # --------------------------------------------------

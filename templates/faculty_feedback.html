@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Feedback - EduMine</title>
+</head>
+
+<body>
+    <h1>EduMine</h1>
+    <h2>Anonymous Student Feedback</h2>
+
+    <p>Welcome, {{ name }}!</p>
+    <p>Student identities are hidden from this view.</p>
+
+    <hr>
+
+    {% if feedback_records %}
+    <table border="1" cellpadding="10" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Feedback ID</th>
+                <th>Subject</th>
+                <th>Rating</th>
+                <th>Comment</th>
+                <th>Sentiment</th>
+                <th>Submitted At</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for record in feedback_records %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td>{{ record.subject }}</td>
+                <td>{{ record.rating }}/5</td>
+                <td>{{ record.comment }}</td>
+                <td>{{ record.sentiment or "Not analyzed" }}</td>
+                <td>{{ record.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No feedback has been submitted through EduMine yet.</p>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('faculty_dashboard') }}">Back to Faculty Dashboard</a>
+    <br><br>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>
