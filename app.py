@@ -14,6 +14,7 @@ from mining.keywords import get_top_keywords
 # --------------------------------------------------
 
 app = Flask(__name__)
+from database.init_db import *
 app.secret_key = "edumine-development-key"
 
 DATABASE = "database/edumine.db"
@@ -146,47 +147,100 @@ def login():
     return render_template("login.html")
 
 
+
 # --------------------------------------------------
 # Submit feedback
 # --------------------------------------------------
 
+
 @app.route("/feedback", methods=["GET", "POST"])
 def feedback():
-
     if session.get("role") != "student":
         return redirect(url_for("login"))
 
-    if request.method == "POST":
-        subject = request.form["subject"]
-        faculty_id = request.form["faculty_id"]
-        rating = request.form["rating"]
-        comment = request.form["comment"]
-        sentiment = predict_sentiment(comment)
+    connection = get_db_connection()
 
-        connection = get_db_connection()
+    try:
+        rows = connection.execute(
+            "SELECT id, name, subject FROM faculty ORDER BY subject, name"
+        ).fetchall()
 
-        connection.execute(
-            """
-            INSERT INTO feedback
-            (student_id, faculty_id, subject, rating, comment, sentiment)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """,
-            (
-                session["user_id"],
-                faculty_id,
-                subject,
-                rating,
-                comment,
-                sentiment
+        faculty_rows = [dict(row) for row in rows]
+        subjects = sorted({
+            row["subject"] for row in faculty_rows if row["subject"]
+        })
+
+        if request.method == "POST":
+            subject = request.form.get("subject", "").strip()
+            faculty_id = request.form.get("faculty_id", "").strip()
+            rating_input = request.form.get("rating", "").strip()
+            comment = request.form.get("comment", "").strip()
+
+            if not subject or not faculty_id:
+                return "Please select a subject and faculty.", 400
+
+            if rating_input not in {"1", "2", "3", "4", "5"}:
+                return "Please select a valid rating.", 400
+
+            if not comment:
+                return "Please enter a comment.", 400
+
+            faculty = connection.execute(
+                "SELECT id, subject FROM faculty WHERE id = ?",
+                (faculty_id,)
+            ).fetchone()
+
+            if not faculty or faculty["subject"] != subject:
+                return "Invalid faculty selection for this subject.", 400
+
+            existing = connection.execute(
+                """
+                SELECT id FROM feedback
+                WHERE student_id = ? AND subject = ? AND faculty_id = ?
+                """,
+                (session["user_id"], subject, faculty_id)
+            ).fetchone()
+
+            if existing:
+                return (
+                    "You have already submitted feedback for this subject "
+                    "and faculty.",
+                    409
+                )
+
+            rating = int(rating_input)
+            sentiment = predict_sentiment(comment)
+
+            connection.execute(
+                """
+                INSERT INTO feedback
+                (student_id, faculty_id, subject, rating, comment, sentiment)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    session["user_id"],
+                    faculty_id,
+                    subject,
+                    rating,
+                    comment,
+                    sentiment
+                )
             )
+            connection.commit()
+
+            return render_template(
+                "feedback_success.html",
+                message="Feedback submitted successfully!"
+            )
+
+        return render_template(
+            "feedback.html",
+            subjects=subjects,
+            faculty_rows=faculty_rows
         )
 
-        connection.commit()
+    finally:
         connection.close()
-
-        return "Feedback submitted successfully!"
-
-    return render_template("feedback.html")
 
 
 # --------------------------------------------------

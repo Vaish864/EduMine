@@ -1,0 +1,74 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Submitted | EduMine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta http-equiv="refresh" content="2;url={{ url_for('student_dashboard') }}">
+    <style>
+        .success-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .success-card {
+            max-width: 460px;
+            width: 100%;
+            padding: 40px 28px;
+            background: white;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .success-icon {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #e3f8eb;
+            color: #16834a;
+            font-size: 34px;
+            font-weight: bold;
+        }
+
+        .success-card h1 {
+            margin-bottom: 12px;
+        }
+
+        .success-card p {
+            line-height: 1.6;
+        }
+
+        .redirect-note {
+            margin-top: 22px;
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <main class="success-container">
+        <section class="success-card">
+            <div class="success-icon" aria-hidden="true">✓</div>
+            <h1>Feedback Submitted!</h1>
+            <p>{{ message }}</p>
+            <p class="redirect-note">
+                Redirecting you to your dashboard in 2 seconds...
+            </p>
+            <a href="{{ url_for('student_dashboard') }}">
+                Go to dashboard now
+            </a>
+        </section>
+    </main>
+</body>
+</html>
+```

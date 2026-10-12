@@ -7,3 +7,7 @@ __pycache__/
 # Large datasets
 data/*.tsv
 data/*.csv
+# Local database and backups
+database/*.db
+*_backup*.db
+*_backup*.pkl
