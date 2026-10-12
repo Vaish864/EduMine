@@ -15,6 +15,7 @@ from mining.keywords import get_top_keywords
 
 app = Flask(__name__)
 from database.init_db import *
+import seed_demo_accounts
 app.secret_key = "edumine-development-key"
 
 DATABASE = "database/edumine.db"
